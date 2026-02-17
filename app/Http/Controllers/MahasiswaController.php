@@ -3,67 +3,88 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
+use App\Models\Matakuliah;
 use Illuminate\Http\Request;
 
 class MahasiswaController extends Controller
 {
-    // Tampil semua data
+    // =========================
+    // TAMPIL SEMUA DATA
+    // =========================
     public function index()
     {
         $mahasiswas = Mahasiswa::all();
         return view('mahasiswa.index', compact('mahasiswas'));
     }
 
-    // Form tambah data
+    // =========================
+    // FORM TAMBAH DATA
+    // =========================
     public function create()
     {
-        return view('mahasiswa.create');
+        $matakuliahs = Matakuliah::all();
+        return view('mahasiswa.create', compact('matakuliahs'));
     }
 
-    // Simpan data baru
+    // =========================
+    // SIMPAN DATA BARU
+    // =========================
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nim' => 'required|unique:mahasiswas,nim',
             'nama' => 'required',
             'kelas' => 'required',
             'matakuliah' => 'required'
         ]);
 
-        Mahasiswa::create($request->all());
-        return redirect()->route('mahasiswa.index')->with('success', 'Data berhasil ditambahkan!');
+        Mahasiswa::create($validated);
+
+        return redirect()
+            ->route('mahasiswa.index')
+            ->with('success', 'Data mahasiswa berhasil ditambahkan');
     }
 
-    // Tampil detail (opsional)
-    public function show(Mahasiswa $mahasiswa)
+    // =========================
+    // FORM EDIT DATA
+    // =========================
+    public function edit($nim)
     {
-        return view('mahasiswa.show', compact('mahasiswa'));
+        $mahasiswa = Mahasiswa::findOrFail($nim);
+        $matakuliahs = Matakuliah::all();
+
+        return view('mahasiswa.edit', compact('mahasiswa', 'matakuliahs'));
     }
 
-    // Form edit data
-    public function edit(Mahasiswa $mahasiswa)
+    // =========================
+    // UPDATE DATA
+    // =========================
+    public function update(Request $request, $nim)
     {
-        return view('mahasiswa.edit', compact('mahasiswa'));
-    }
-
-    // Update data
-    public function update(Request $request, Mahasiswa $mahasiswa)
-    {
-        $request->validate([
-            'nim' => 'required|unique:mahasiswas,nim,' . $mahasiswa->nim . ',nim',
+        $validated = $request->validate([
             'nama' => 'required',
             'kelas' => 'required',
             'matakuliah' => 'required'
         ]);
 
-        $mahasiswa->update($request->all());
-        return redirect()->route('mahasiswa.index')->with('success', 'Data berhasil diupdate!');
+        $mahasiswa = Mahasiswa::findOrFail($nim);
+        $mahasiswa->update($validated);
+
+        return redirect()
+            ->route('mahasiswa.index')
+            ->with('success', 'Data mahasiswa berhasil diperbarui');
     }
 
-    // Hapus data
-    public function destroy(Mahasiswa $mahasiswa)
+    // =========================
+    // HAPUS DATA
+    // =========================
+    public function destroy($nim)
     {
+        $mahasiswa = Mahasiswa::findOrFail($nim);
         $mahasiswa->delete();
-        return redirect()->route('mahasiswa.index')->with('success', 'Data berhasil dihapus!');
+
+        return redirect()
+            ->route('mahasiswa.index')
+            ->with('success', 'Data mahasiswa berhasil dihapus');
     }
 }

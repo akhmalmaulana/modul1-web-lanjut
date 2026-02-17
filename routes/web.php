@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\WelcomeController;
-use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\MatakuliahController;
 use App\Http\Controllers\LatihanController;
 
 /*
@@ -15,7 +14,7 @@ use App\Http\Controllers\LatihanController;
 
 // Redirect default ke Mahasiswa
 Route::get('/', function () {
-    return redirect('/mahasiswa');
+    return redirect()->route('mahasiswa.index');
 });
 
 /*
@@ -28,18 +27,24 @@ Route::get('/welcome', [WelcomeController::class, 'welcome']);
 
 /*
 |--------------------------------------------------------------------------
-| Route Latihan & Mata Kuliah
+| Route Latihan
 |--------------------------------------------------------------------------
 */
 
 Route::get('/latihan', [LatihanController::class, 'index']);
-Route::get('/matkul', [MataKuliahController::class, 'index']);
 
 /*
 |--------------------------------------------------------------------------
-| Route Mahasiswa (CRUD FULL)
+| CRUD Mahasiswa
 |--------------------------------------------------------------------------
 */
 
-Route::resource('mahasiswa', MahasiswaController::class)
-    ->parameters(['mahasiswa' => 'id']);
+Route::resource('mahasiswa', MahasiswaController::class);
+
+/*
+|--------------------------------------------------------------------------
+| CRUD Mata Kuliah
+|--------------------------------------------------------------------------
+*/
+
+Route::resource('matakuliah', MatakuliahController::class);

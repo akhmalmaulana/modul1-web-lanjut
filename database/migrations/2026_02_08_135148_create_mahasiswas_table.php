@@ -2,17 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class Mahasiswa extends Model
+return new class extends Migration
 {
-    use HasFactory;
+    public function up(): void
+    {
+        Schema::create('mahasiswas', function (Blueprint $table) {
+            $table->id();
+            $table->string('nim')->unique();
+            $table->string('nama');
+            $table->timestamps();
+        });
+    }
 
-    protected $fillable = [
-        'nim',
-        'nama',
-        'kelas',
-        'matakuliah'
-    ];
-}
+    public function down():void
+    {
+        Schema::dropIfExists('mahasiswas');
+    }
+};
