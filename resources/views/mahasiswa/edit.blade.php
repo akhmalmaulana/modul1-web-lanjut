@@ -1,69 +1,59 @@
-@extends('layouts.app')
-
-@section('content')
-
-<div class="card shadow">
-    <div class="card-header bg-warning">
-        <h4>Edit Data Mahasiswa</h4>
-    </div>
-
-    <div class="card-body">
-
-        {{-- Menampilkan Error Validasi --}}
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Mahasiswa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Edit Mahasiswa</h2>
+        
         <form action="{{ route('mahasiswa.update', $mahasiswa->nim) }}" method="POST">
             @csrf
             @method('PUT')
-
+            
             <div class="mb-3">
-                <label class="form-label">NIM</label>
-                <input type="text" class="form-control"
-                       value="{{ $mahasiswa->nim }}" disabled>
-                <small class="text-muted">NIM tidak dapat diubah</small>
+                <label>NIM</label>
+                <input type="text" name="nim" class="form-control @error('nim') is-invalid @enderror" value="{{ old('nim', $mahasiswa->nim) }}" readonly>
+                @error('nim')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-
+            
             <div class="mb-3">
-                <label class="form-label">Nama</label>
-                <input type="text" name="nama"
-                       class="form-control"
-                       value="{{ old('nama', $mahasiswa->nama) }}">
+                <label>Nama</label>
+                <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" value="{{ old('nama', $mahasiswa->nama) }}">
+                @error('nama')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-
+            
             <div class="mb-3">
-                <label class="form-label">Kelas</label>
-                <input type="text" name="kelas"
-                       class="form-control"
-                       value="{{ old('kelas', $mahasiswa->kelas) }}">
+                <label>Kelas</label>
+                <input type="text" name="kelas" class="form-control @error('kelas') is-invalid @enderror" value="{{ old('kelas', $mahasiswa->kelas) }}">
+                @error('kelas')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-
+            
             <div class="mb-3">
-                <label class="form-label">Mata Kuliah</label>
-                <input type="text" name="matakuliah"
-                       class="form-control"
-                       value="{{ old('matakuliah', $mahasiswa->matakuliah) }}">
+                <label>Mata Kuliah</label>
+                <select name="matakuliah_id" class="form-control @error('matakuliah_id') is-invalid @enderror">
+                    <option value="">-- Pilih Mata Kuliah --</option>
+                    @foreach($data_mk as $mk)
+                        <option value="{{ $mk->id }}" {{ old('matakuliah_id', $mahasiswa->matakuliah_id) == $mk->id ? 'selected' : '' }}>
+                            {{ $mk->kode_mk }} - {{ $mk->nama_mk }} ({{ $mk->sks }} SKS)
+                        </option>
+                    @endforeach
+                </select>
+                @error('matakuliah_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-
-            <button type="submit" class="btn btn-success">
-                Update
-            </button>
-
-            <a href="{{ route('mahasiswa.index') }}"
-               class="btn btn-secondary">
-                Batal
-            </a>
-
+            
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="{{ route('mahasiswa.index') }}" class="btn btn-secondary">Kembali</a>
         </form>
-
     </div>
-</div>
-
-@endsection
+</body>
+</html>

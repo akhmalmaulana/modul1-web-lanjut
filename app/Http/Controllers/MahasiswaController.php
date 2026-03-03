@@ -8,59 +8,99 @@ use Illuminate\Http\Request;
 
 class MahasiswaController extends Controller
 {
+    // ==============================
+    // INDEX
+    // ==============================
     public function index()
     {
-        $mahasiswas = Mahasiswa::with('matakuliah')->get();
+        $mahasiswas = Mahasiswa::with(['matakuliah', 'user'])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
         return view('mahasiswa.index', compact('mahasiswas'));
     }
-    
+
+    // ==============================
+    // CREATE
+    // ==============================
     public function create()
     {
         $data_mk = Matakuliah::all();
         return view('mahasiswa.create', compact('data_mk'));
     }
-    
+
+    // ==============================
+    // STORE
+    // ==============================
     public function store(Request $request)
     {
-        $request->validate([
-            'nim' => 'required|unique:mahasiswas,nim|max:20',
-            'nama' => 'required|max:100',
-            'kelas' => 'required|max:10',
-            'matakuliah_id' => 'nullable|exists:matakuliahs,id'
+        $validated = $request->validate([
+            'nim' => 'required|unique:mahasiswas,nim',
+            'nama' => 'required',
+            'kelas' => 'required',
+            'matakuliah_id' => 'required|exists:matakuliahs,id'
         ]);
-        
-        Mahasiswa::create($request->all());
-        
-        return redirect()->route('mahasiswa.index')
-                         ->with('success', 'Mahasiswa berhasil ditambahkan');
+
+        $validated['user_id'] = auth()->id();
+
+        Mahasiswa::create($validated);
+
+        return redirect()
+            ->route('mahasiswa.index')
+            ->with('success', 'Mahasiswa berhasil ditambahkan');
     }
-    
+
+    // ==============================
+    // EDIT
+    // ==============================
     public function edit(Mahasiswa $mahasiswa)
     {
+        if ($mahasiswa->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $data_mk = Matakuliah::all();
+
         return view('mahasiswa.edit', compact('mahasiswa', 'data_mk'));
     }
-    
+
+    // ==============================
+    // UPDATE
+    // ==============================
     public function update(Request $request, Mahasiswa $mahasiswa)
     {
-        $request->validate([
-            'nim' => 'required|max:20|unique:mahasiswas,nim,' . $mahasiswa->nim . ',nim',
-            'nama' => 'required|max:100',
-            'kelas' => 'required|max:10',
-            'matakuliah_id' => 'nullable|exists:matakuliahs,id'
+        if ($mahasiswa->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'nim' => 'required|unique:mahasiswas,nim,' . $mahasiswa->id,
+            'nama' => 'required',
+            'kelas' => 'required',
+            'matakuliah_id' => 'required|exists:matakuliahs,id'
         ]);
-        
-        $mahasiswa->update($request->all());
-        
-        return redirect()->route('mahasiswa.index')
-                         ->with('success', 'Mahasiswa berhasil diupdate');
+
+        $mahasiswa->update($validated);
+
+        return redirect()
+            ->route('mahasiswa.index')
+            ->with('success', 'Mahasiswa berhasil diupdate');
     }
-    
+
+    // ==============================
+    // DESTROY
+    // ==============================
     public function destroy(Mahasiswa $mahasiswa)
     {
+        if ($mahasiswa->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $mahasiswa->delete();
-        
-        return redirect()->route('mahasiswa.index')
-                         ->with('success', 'Mahasiswa berhasil dihapus');
+
+        return redirect()
+            ->route('mahasiswa.index')
+            ->with('success', 'Mahasiswa berhasil dihapus');
     }
 }

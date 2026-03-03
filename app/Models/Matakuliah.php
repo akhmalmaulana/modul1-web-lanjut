@@ -24,12 +24,6 @@ class MataKuliah extends Model
     // Relasi many-to-many dengan Mahasiswa
     public function mahasiswas()
     {
-        return $this->belongsToMany(
-            Mahasiswa::class, 
-            'mahasiswa_matakuliah', 
-            'kode_mk', 
-            'nim'
-        )->withPivot('nilai')
-         ->withTimestamps();
+        return $this->hasMany(Mahasiswa::class);
     }
 }
