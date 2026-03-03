@@ -1,38 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>CRUD Akademik</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Akademik</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
-        <a class="navbar-brand" href="#">CRUD Akademik</a>
-
-        <ul class="navbar-nav ms-auto d-flex flex-row gap-3">
-            <li class="nav-item">
-                <a class="nav-link {{ request()->is('mahasiswa*') ? 'fw-bold text-warning' : 'text-white' }}"
-                   href="{{ route('mahasiswa.index') }}">
-                    Mahasiswa
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->is('matakuliah*') ? 'fw-bold text-warning' : 'text-white' }}"
-                   href="{{ route('matakuliah.index') }}">
-                    Mata Kuliah
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<div class="container mt-4">
-    @yield('content')
-</div>
-
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">Sistem Akademik</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="{{ route('mahasiswa.index') }}">Mahasiswa</a>
+                <a class="nav-link" href="{{ route('matakuliah.index') }}">Mata Kuliah</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main>
+        @yield('content')
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

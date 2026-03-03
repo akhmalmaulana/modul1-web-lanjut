@@ -1,50 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MatakuliahController;
-use App\Http\Controllers\LatihanController;
+use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Route Dasar
-|--------------------------------------------------------------------------
-*/
-
-// Redirect default ke Mahasiswa
 Route::get('/', function () {
-    return redirect()->route('mahasiswa.index');
+    return view('welcome');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Route Welcome
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/welcome', [WelcomeController::class, 'welcome']);
-
-/*
-|--------------------------------------------------------------------------
-| Route Latihan
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/latihan', [LatihanController::class, 'index']);
-
-/*
-|--------------------------------------------------------------------------
-| CRUD Mahasiswa
-|--------------------------------------------------------------------------
-*/
-
+// Route Resource untuk Mahasiswa
 Route::resource('mahasiswa', MahasiswaController::class);
 
-/*
-|--------------------------------------------------------------------------
-| CRUD Mata Kuliah
-|--------------------------------------------------------------------------
-*/
-
+// Route Resource untuk Matakuliah
 Route::resource('matakuliah', MatakuliahController::class);

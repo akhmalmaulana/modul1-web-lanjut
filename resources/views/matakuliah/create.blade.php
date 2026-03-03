@@ -27,6 +27,7 @@
 
                 <form action="{{ route('matakuliah.store') }}" method="POST">
                     @csrf
+                    @method('POST')
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Kode MK</label>

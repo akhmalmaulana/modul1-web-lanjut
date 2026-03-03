@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Matakuliah extends Model
+class MataKuliah extends Model
 {
+    use HasFactory;
+
+    protected $table = 'matakuliahs';
     protected $primaryKey = 'kode_mk';
     public $incrementing = false;
     protected $keyType = 'string';
@@ -17,8 +21,15 @@ class Matakuliah extends Model
         'semester'
     ];
 
+    // Relasi many-to-many dengan Mahasiswa
     public function mahasiswas()
     {
-        return $this->hasMany(Mahasiswa::class);
+        return $this->belongsToMany(
+            Mahasiswa::class, 
+            'mahasiswa_matakuliah', 
+            'kode_mk', 
+            'nim'
+        )->withPivot('nilai')
+         ->withTimestamps();
     }
 }
